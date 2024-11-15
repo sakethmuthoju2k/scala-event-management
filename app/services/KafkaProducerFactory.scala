@@ -105,7 +105,27 @@ class KafkaProducerFactory @Inject()() {
 
   }
 
-  def sendPeriodicUpdate(event: Event, task: Task, timeDescription: Int): Unit = {
+//  def sendPeriodicUpdate(event: Event, task: Task, timeDescription: Int): Unit = {
+//    val receiver = task.teamId match {
+//      case 1 => MessageTeam.CATERING
+//      case 2 => MessageTeam.ENTERTAINMENT
+//      case 3 => MessageTeam.DECORATIONS
+//      case 4 => MessageTeam.LOGISTICS
+//    }
+//
+//    val message = s"Complete your task: ${task.id} for event: ${event.id}, remaining: $timeDescription hours"
+//
+//    val kafkaMessageFormat = KafkaMessageFormat(
+//      receiver=receiver,
+//      messageType="PREPARATION_UPDATE",
+//      message= message
+//    )
+//
+//    val jsonMessage: String = Json.stringify(Json.toJson(kafkaMessageFormat))
+//    producer.send(new ProducerRecord[String, String]("event-management-topic", jsonMessage))
+//  }
+
+  def queueNotifications(task: Task, time: Int): Unit = {
     val receiver = task.teamId match {
       case 1 => MessageTeam.CATERING
       case 2 => MessageTeam.ENTERTAINMENT
@@ -113,7 +133,7 @@ class KafkaProducerFactory @Inject()() {
       case 4 => MessageTeam.LOGISTICS
     }
 
-    val message = s"Complete your task: ${task.id} for event: ${event.id}, remaining: $timeDescription hours"
+    val message = s"Complete your task: ${task.id}, remaining: $time hours"
 
     val kafkaMessageFormat = KafkaMessageFormat(
       receiver=receiver,
