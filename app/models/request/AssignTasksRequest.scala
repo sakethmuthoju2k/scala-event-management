@@ -1,9 +1,7 @@
-package models
+package models.request
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-
-import java.time.{LocalDate, LocalDateTime}
 
 case class TasksRequest(teamId: Long, taskDescription: String,
                         deadLine: String, specialInstructions: Option[String])

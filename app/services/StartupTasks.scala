@@ -1,11 +1,8 @@
 package services
 
-import models.entity.{Event, Task}
-
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import repositories.{EventRepository, TaskRepository}
-import java.time.format.DateTimeFormatter
 import java.time.{Duration, LocalDate, LocalDateTime, LocalTime}
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 

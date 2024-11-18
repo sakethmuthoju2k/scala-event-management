@@ -1,9 +1,7 @@
-package models
+package models.request
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-
-import java.time.{LocalDate, LocalDateTime}
 
 case class KafkaMessageFormat(
                               receiver: String,
@@ -12,7 +10,7 @@ case class KafkaMessageFormat(
                             )
 
 object KafkaMessageFormat {
-  private val receiverReads: Reads[String] = (JsPath \ "project").read[String]
+  private val receiverReads: Reads[String] = (JsPath \ "receiver").read[String]
   private val messageTypeReads: Reads[String] = (JsPath \ "messageType").read[String]
   private val messageReads: Reads[String] = (JsPath \ "message").read[String]
 
