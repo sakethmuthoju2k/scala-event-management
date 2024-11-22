@@ -1,6 +1,6 @@
 package repositories
 
-import models.entity.{Event, Task}
+import models.entity.Task
 import models.enums.TaskStatus.TaskStatus
 import ColumnMappings._
 import javax.inject.{Inject, Singleton}
@@ -16,8 +16,6 @@ class TaskRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
   import profile.api._
 
   private class TaskTable(tag: Tag) extends Table[Task](tag, "tasks")  {
-    //    import NotificationsTable.utilDateColumnType
-
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def eventId = column[Long]("event_id")
     def teamId = column[Long]("team_id")

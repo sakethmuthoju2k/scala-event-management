@@ -1,10 +1,13 @@
 package services
 
+import config.EnvConfig
 import models.entity.{Event, Issue, Task}
 import models.request.KafkaMessageFormat
 import play.api.libs.json._
+
 import javax.inject._
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
+
 import java.util.Properties
 
 object MessageTeam {
@@ -18,7 +21,7 @@ object MessageTeam {
 @Singleton
 class KafkaProducerFactory @Inject()() {
   private val props = new Properties() { props =>
-    props.put("bootstrap.servers", "localhost:9092")
+    props.put("bootstrap.servers", EnvConfig.getKafkaBroker)
     props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
     props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   }
@@ -113,16 +116,6 @@ class KafkaProducerFactory @Inject()() {
       receiver = determineReceiver(task.teamId),
       messageType = "PREPARATION_UPDATE",
       message = s"Complete your task: #${task.id}, remaining: $time hours"
-    )
-
-    producer.send(record)
-  }
-
-  def sendDemo(): Unit = {
-    val record = createKafkaMessage(
-      receiver = MessageTeam.MANAGER,
-      messageType = "SEND_DEMO",
-      message = "message"
     )
 
     producer.send(record)

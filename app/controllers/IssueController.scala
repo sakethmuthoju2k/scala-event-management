@@ -14,7 +14,13 @@ class IssueController @Inject()(
                                 issueService: IssueService
                               )(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
-  // Register a team
+  /**
+   * Creates a new issue in the system.
+   * Validates and processes the issue information provided in the JSON payload.
+   *
+   * @return An Action wrapper containing the HTTP response:
+   *         - 201 (Created) with success message and created issue ID
+   */
   def create(): Action[JsValue] = Action.async(parse.json) { request =>
     request.body.validate[Issue] match {
       case JsSuccess(issue, _) =>

@@ -16,7 +16,13 @@ class TaskController @Inject()(
      taskService: TaskService
 )(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
-  // Create a task
+  /**
+   * Creates a new task in the system.
+   * Validates and processes the task information provided in the JSON payload.
+   *
+   * @return An Action wrapper containing the HTTP response:
+   *         - 201 (Created) with success message and created task ID
+   */
   def createTask(): Action[JsValue] = Action.async(parse.json) { request =>
     request.body.validate[Task] match {
       case JsSuccess(task, _) =>
@@ -30,20 +36,42 @@ class TaskController @Inject()(
     }
   }
 
-  // Get task details
+  /**
+   * Retrieves detailed information for a specific task by its ID.
+   *
+   * @param taskId The unique identifier of the task to retrieve
+   * @return An Action wrapper containing the HTTP response:
+   *         - 200 (OK) with the task details as JSON
+   */
   def getTaskById(taskId: Long): Action[AnyContent] = Action.async {
     taskService.getTaskById(taskId).map(created =>
       ApiResponse.successResult(200, Json.toJson(created)))
   }
 
-  // Update task details
+  /**
+   * Updates the status of an existing task.
+   * Converts the status string to TaskStatus enum before processing.
+   *
+   * @param taskId The unique identifier of the task to update
+   * @param status The new status to be applied (must match TaskStatus enum values)
+   * @return An Action wrapper containing the HTTP response:
+   *         - 200 (OK) with the updated task details
+   *
+   * Note: Status must be a valid TaskStatus enum value
+   */
   def updateTaskStatus(taskId: Long, status: String): Action[AnyContent] = Action.async {
     val taskStatus = TaskStatus.withNameOption(Some(status))
     taskService.updateStatus(taskId, taskStatus.get).map(updated =>
       ApiResponse.successResult(200, Json.toJson(updated)))
   }
 
-  // Assign tasks
+  /**
+   * Assigns tasks to teams for specified eventId.
+   * Processes bulk task assignments in a single request.
+   *
+   * @return An Action wrapper containing the HTTP response:
+   *         - 200 (OK) with the assignment results
+   */
   def assignTasks(): Action[JsValue] = Action.async(parse.json) { request =>
     request.body.validate[AssignTasksRequest] match {
       case JsSuccess(req, _) =>

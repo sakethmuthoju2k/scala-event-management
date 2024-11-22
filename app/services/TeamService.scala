@@ -3,7 +3,6 @@ package services
 import models.entity.Team
 import models.enums.TeamType.TeamType
 import repositories.TeamRepository
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
